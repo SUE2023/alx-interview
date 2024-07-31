@@ -4,6 +4,7 @@
 
 def canUnlockAll(boxes):
     """ Determines if all boxes can be opened"""
+    
     if not boxes:
         return False
     
