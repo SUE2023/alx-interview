@@ -11,15 +11,15 @@ def minOperations(n):
         return 0
 
     operations = 0
-    current = 1 """the initial number of 'H's"""
+    current = 1
     while current < n: """find the smallest factor of n """
-        for i in range(2, int(n**0.5) + 1):
+    for i in range(2, int(n**0.5) + 1):
             if n % i == 0:
                 operations += i
                 current *= i
                 break
-        else:
-            operations += (n - current)
-            current = n
+            else:
+                operations += (n - current)
+                current = n
 
     return operations
