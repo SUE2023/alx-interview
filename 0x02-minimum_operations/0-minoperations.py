@@ -12,8 +12,8 @@ def minOperations(n):
 
     operations = 0
     current = 1
-    while current < n: """find the smallest factor of n """
-    for i in range(2, int(n**0.5) + 1):
+    while current < n:
+        for i in range(2, int(n**0.5) + 1):
             if n % i == 0:
                 operations += i
                 current *= i
