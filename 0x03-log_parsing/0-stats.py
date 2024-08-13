@@ -1,53 +1,49 @@
 #!/usr/bin/python3
-
 import sys
-import re
-from collections import defaultdict
 
-def print_msg(status_counts, total_size):
+
+def print_msg(dict_sc, total_file_size):
     """
-    Method to print the file size and status codes.
-    
+    Method to print
     Args:
-        status_counts: defaultdict with status codes and their counts
-        total_size: total size of files processed
+        dict_sc: dict of status codes
+        total_file_size: total of the file
+    Returns:
+        Nothing
     """
-    print(f"File size: {total_size}")
-    for code in sorted(status_counts.keys()):
-        if status_counts[code] > 0:
-            print(f"{code}: {status_counts[code]}")
 
-def process_logs():
-    """
-    Processes log lines from stdin and prints statistics.
-    """
-    valid_status_codes = {"200", "301", "400", "401", "403", "404", "405", "500"}
-    status_counts = defaultdict(int)
-    total_size = 0
-    line_count = 0
-    log_pattern = re.compile(r'^.* - \[.*\] "GET /projects/260 HTTP/1.1" (\d{3}) (\d+)$')
+    print("File size: {}".format(total_file_size))
+    for key, val in sorted(dict_sc.items()):
+        if val != 0:
+            print("{}: {}".format(key, val))
 
-    try:
-        for line in sys.stdin:
-            match = log_pattern.match(line)
-            if match:
-                status_code, file_size = match.groups()
-                if status_code in valid_status_codes:
-                    file_size = int(file_size)
-                    status_counts[status_code] += 1
-                    total_size += file_size
-                    line_count += 1
 
-                    if line_count % 10 == 0:
-                        print_msg(status_counts, total_size)
+total_file_size = 0
+code = 0
+counter = 0
+dict_sc = {"200": 0, "301": 0, "400": 0, "401": 0, "403": 0,
+           "404": 0, "405": 0, "500": 0}
 
-    except KeyboardInterrupt:
-        # Handle keyboard interruption (CTRL + C)
-        pass
 
-    finally:
-        # Print final statistics
-        print_msg(status_counts, total_size)
+try:
+    for line in sys.stdin:
+        parsed_line = line.split()  # trimming
+        parsed_line = parsed_line[::-1]  # inverting
 
-if __name__ == "__main__":
-    process_logs()
+        if len(parsed_line) > 2:
+            counter += 1
+
+            if counter <= 10:
+                total_file_size += int(parsed_line[0])  # file size
+                code = parsed_line[1]  # status code
+
+                if (code in dict_sc.keys()):
+                    dict_sc[code] += 1
+
+            if (counter == 10):
+                print_msg(dict_sc, total_file_size)
+                counter = 0
+
+
+finally:
+    print_msg(dict_sc, total_file_size)
