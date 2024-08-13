@@ -20,6 +20,3 @@ def minOperations(n):
             current += 1
 
     return operations
-
-            # reduce root to find remaining smaller vals that evenly-divide n
-            #root -= 1
